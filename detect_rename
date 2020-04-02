@@ -1,0 +1,8 @@
+for i in {205..220}
+do
+    
+    ./darknet detect weigh/yolov31.cfg weigh/rgb/yolov31_6000.weights images/rgb_${i}.png >> rgb_${i}.log
+
+    mv predictions.jpg rgb_detect_${i}.jpg
+    
+done

@@ -1,0 +1,6 @@
+#!/usr/bin/ksh
+ls -1 depth_*.png | while read mFName; do
+  mNewFName=$(echo ${mFName} | sed 's/depth_//')
+  echo "Now renaming ${mFName} to ${mNewFName}"
+  mv ${mFName} ${mNewFName}
+done
