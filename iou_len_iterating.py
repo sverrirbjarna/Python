@@ -3,19 +3,14 @@ import cv2
 from scipy.spatial import distance
 import argparse
 
-
+nr = 1
 hp = 720
 wp = 1280
-
-source = "/home/sverrir/Documents/Yolo_data/training_darknet_3_feb/Testset_detection/"
-
-for nr in range(1, 31):
+for nr in range(1, 30):
     print(str(nr).zfill(2))
     pathg = "/home/sverrir/Documents/Yolo_data/Testset/"+str(nr).zfill(2)+".txt"
     #pathp = "/home/sverrir/Documents/Yolo_data/Testset/"+str(nr)+".txt"
-    pathp = source+str(nr).zfill(2)+".txt"
-    file1 = open(source+"Detect_info.txt","a")#append mode 
-    
+    pathp = "/home/sverrir/Documents/Yolo_data/training_darknet_3_feb/Testset_detection/"+str(nr).zfill(2)+".txt"
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-g', '--groundpath', action='store',
@@ -38,14 +33,20 @@ for nr in range(1, 31):
     with open(predpath) as textFile:
         prediicttxt = [line.split() for line in textFile]
 
-    
+    tmp = []
+    temp = 0
+    for i in groundtxt:
+        d = 0
+        for j in prediicttxt:
+            d_tmp = distance.euclidean((int(wp * float(i[1])), int(hp * float(i[2]))),
+                                    (int(wp * float(j[1])), int(hp * float(j[2]))))
+            if d_tmp < d:
+                temp = 0
+        tmp.append(j)
     #print(tmp)
     #print(groundtxt)
 
-    nr_ground = len(groundtxt)
-    nr_bbox = len(prediicttxt)
-    print("box: "+str(nr_ground))
-    #print(nr_bbox)
+    nr_bbox = len(groundtxt)
 
     #print(groundtxt, prediicttxt)
 
@@ -53,10 +54,7 @@ for nr in range(1, 31):
     #groundtxt += ['0' '0' '0' '0' '0'] * (max_length - len(groundtxt))
     #prediicttxt += ['0' '0' '0' '0' '0'] * (max_length - len(prediicttxt))
     d = 1000
-    d_max = 0
-    d_average = 0
     d_best=[]
-    d_maxp=[]
 
     image = cv2.imread(photopath)
     examples = []
@@ -86,15 +84,11 @@ for nr in range(1, 31):
         d_tmp = distance.euclidean((int(wp * gt[0]), int(hp * gt[1])),
                                 (int(wp * pred[0]), int(hp * pred[1])))
 
-        d_average = d_average + d_tmp
+        #d = d + d_tmp
         #print(d_tmp)
         if d_tmp < d:
             d = d_tmp
             d_best = [(int(wp * gt[0]), int(hp * gt[1])), (int(wp * pred[0]), int(hp * pred[1]))]
-        
-        if d_tmp > d_max:
-            d_max = d_tmp
-            d_maxp = [(int(wp * gt[0]), int(hp * gt[1])), (int(wp * pred[0]), int(hp * pred[1]))]
 
     #print(examples)
 
@@ -149,41 +143,19 @@ for nr in range(1, 31):
         #    d = d_tmp
         #    d_best = [(int(wp * gt[0]), int(hp * gt[1])), (int(wp * pred[0]), int(hp * pred[1]))]
 
-    #print(len(d_best))
-
-    if len(d_best)>0:
-        cv2.circle(image, d_best[1], 2, (0, 255, 0), 6)
-
-    if nr_bbox == 0:
-        nr_bbox = 1
-    #print(nr_bbox)
+    #print(d_best)
+    cv2.circle(image, d_best[1], 2, (0, 255, 0), 2)
     iou = iou / nr_bbox
-    d_average = d_average / nr_bbox
-
-    file1.write(str(nr)+"\n") 
-    file1.write("IoU: "+str(iou)+"\n")
-    file1.write("Min Distance: "+str(d)+"\n")
-    file1.write("Max Distance: "+str(d_max)+"\n")
-    file1.write("Average Distance: "+str(d_average)+"\n")
-    file1.close() 
 
     cv2.putText(image, "IoU: {:.4f}".format(iou), (10, 30),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
     #print("{}: {:.4f}".format(detection.image_path, iou))
 
-    cv2.putText(image, "Min Distance: {:.4f}".format(d), (10, 50),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 50), 2)
-    #print("{}: {:.4f}".format(detection.image_path, d))
-
-    cv2.putText(image, "Max Distance: {:.4f}".format(d_max), (10, 70),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 50), 2)
-    #print("{}: {:.4f}".format(detection.image_path, d))
-
-    cv2.putText(image, "Average Distance: {:.4f}".format(d_average), (10, 90),
+    cv2.putText(image, "Distance: {:.4f}".format(d), (10, 50),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 50), 2)
     #print("{}: {:.4f}".format(detection.image_path, d))
 
     # show the output image
     #cv2.imshow("Image", image)
-    cv2.imwrite(source+"IOU"+str(nr)+".png", image)
+    cv2.imwrite("/home/sverrir/Documents/Yolo_data/IOU"+str(nr)+".png", image)
     # cv2.waitKey(0)
