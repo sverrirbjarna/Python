@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import os
 import glob
 
-
+#scale image and filter depth to a 3 layer image 
 
 for filename in glob.glob(os.path.join( '*.png')):
 
