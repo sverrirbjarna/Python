@@ -2,12 +2,19 @@ from collections import namedtuple
 import cv2
 from scipy.spatial import distance
 import argparse
+import os
 
 
 hp = 720
 wp = 1280
 
 source = "/home/sverrir/Documents/Yolo_data/training_darknet_3_feb/Testset_detection/"
+
+if os.path.exists(source+"Detect_info.txt"):
+  os.remove(source+"Detect_info.txt")
+  print("File deleted")
+else:
+  print("The file does not exist")
 
 for nr in range(1, 31):
     print(str(nr).zfill(2))
@@ -174,6 +181,8 @@ for nr in range(1, 31):
     file1.write("Min Distance: "+str(d)+"\n")
     file1.write("Max Distance: "+str(d_max)+"\n")
     file1.write("Average Distance: "+str(d_average)+"\n")
+    file1.write("Nr of detections: "+str(nr_bbox)+"\n")
+    file1.write("\n")
     file1.close() 
 
     cv2.putText(image, "IoU: {:.4f}".format(iou), (10, 30),

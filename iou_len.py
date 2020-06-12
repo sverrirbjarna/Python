@@ -2,12 +2,19 @@ from collections import namedtuple
 import cv2
 from scipy.spatial import distance
 import argparse
+import os
 
 
 hp = 720
 wp = 1280
 
 source = "/home/sverrir/Documents/Yolo_data/training_darknet_3_feb/Testset_detection/"
+
+if os.path.exists(source+"Detect_info.txt"):
+  os.remove(source+"Detect_info.txt")
+  print("File deleted")
+else:
+  print("The file does not exist")
 
 for nr in range(1, 31):
     print(str(nr).zfill(2))
@@ -60,9 +67,18 @@ for nr in range(1, 31):
 
     image = cv2.imread(photopath)
     examples = []
-    for i, j in zip(groundtxt, prediicttxt):
-        gt = [float(i[1]), float(i[2]), float(i[3]), float(i[4])]
+    for j in prediicttxt:
         pred = [float(j[1]), float(j[2]), float(j[3]), float(j[4])]
+        gt = [0, 0, 0, 0]
+        dist = 10000
+        for i in groundtxt:
+            tmp_gt = [float(i[1]), float(i[2]), float(i[3]), float(i[4])]
+            dist_tmp = distance.euclidean((int(wp * tmp_gt[0]), int(hp * tmp_gt[1])),
+                                (int(wp * pred[0]), int(hp * pred[1])))
+            if dist > dist_tmp:
+                gt = tmp_gt
+                dist = dist_tmp
+            
 
         xgt = int((wp * gt[0]) - ((wp * gt[2]) / 2))
         ygt = int(hp * gt[1] - ((hp * gt[3]) / 2))
@@ -165,6 +181,8 @@ for nr in range(1, 31):
     file1.write("Min Distance: "+str(d)+"\n")
     file1.write("Max Distance: "+str(d_max)+"\n")
     file1.write("Average Distance: "+str(d_average)+"\n")
+    file1.write("Nr of detections: "+str(nr_bbox)+"\n")
+    file1.write("\n")
     file1.close() 
 
     cv2.putText(image, "IoU: {:.4f}".format(iou), (10, 30),
