@@ -54,11 +54,6 @@ for nr in range(1, 31):
     print("box: "+str(nr_ground))
     #print(nr_bbox)
 
-    #print(groundtxt, prediicttxt)
-
-    #max_length = max(len(groundtxt), len(prediicttxt))
-    #groundtxt += ['0' '0' '0' '0' '0'] * (max_length - len(groundtxt))
-    #prediicttxt += ['0' '0' '0' '0' '0'] * (max_length - len(prediicttxt))
     d = 1000
     d_max = 0
     d_average = 0
