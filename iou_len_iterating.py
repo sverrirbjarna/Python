@@ -8,7 +8,7 @@ import os
 hp = 720
 wp = 1280
 
-source = "/home/sverrir/Documents/Yolo_data/training_darknet_3_feb/Testset_detection/"
+source = "/home/sverrir/Documents/Yolo_data/log/"
 
 if os.path.exists(source+"Detect_info.txt"):
   os.remove(source+"Detect_info.txt")
@@ -16,12 +16,19 @@ if os.path.exists(source+"Detect_info.txt"):
 else:
   print("The file does not exist")
 
-for nr in range(1, 31):
-    print(str(nr).zfill(2))
-    pathg = "/home/sverrir/Documents/Yolo_data/Testset/"+str(nr).zfill(2)+".txt"
-    #pathp = "/home/sverrir/Documents/Yolo_data/Testset/"+str(nr)+".txt"
-    pathp = source+str(nr).zfill(2)+".txt"
-    file1 = open(source+"Detect_info.txt","a")#append mode 
+if os.path.exists(source+"toExcel.csv"):
+  os.remove(source+"toExcel.csv")
+  print("File deleted")
+else:
+  print("The file does not exist")
+
+for nr in range(1, 2151):
+    print(str(nr).zfill(4))
+    pathg = "/home/sverrir/Documents/Yolo_data/Biersdorf/"+str(nr).zfill(4)+".txt"
+    #pathp = "/home/sverrir/Documents/Yolo_data/Biersdorf/"+str(nr)+".txt"
+    pathp = source+str(nr).zfill(4)+".txt"
+    file1 = open(source+"Detect_info.txt","a")#append mode
+    file2 = open(source + "toExcel.csv", "a")  # append mode
     
 
     parser = argparse.ArgumentParser()
@@ -37,7 +44,7 @@ for nr in range(1, 31):
     predpath = args.predpath
 
     Detection = namedtuple("Detection", ["image_path", "gt", "pred"])
-    photopath = "/home/sverrir/Documents/Yolo_data/Testset/"+str(nr).zfill(2)+".png"
+    photopath = "/home/sverrir/Documents/Yolo_data/Biersdorf/"+str(nr).zfill(4)+".png"
 
     with open(groundpath) as textFile:
         groundtxt = [line.split() for line in textFile]
@@ -178,7 +185,11 @@ for nr in range(1, 31):
     file1.write("Average Distance: "+str(d_average)+"\n")
     file1.write("Nr of detections: "+str(nr_bbox)+"\n")
     file1.write("\n")
-    file1.close() 
+    file1.close()
+    file2.write(
+        str(nr) + "," + str(nr_bbox) + "," + str(iou) + "," + str(d) + "," + str(d_max) + "," + str(d_average) + "\n")
+    file1.close()
+    file2.close()
 
     cv2.putText(image, "IoU: {:.4f}".format(iou), (10, 30),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
@@ -199,4 +210,5 @@ for nr in range(1, 31):
     # show the output image
     #cv2.imshow("Image", image)
     cv2.imwrite(source+"IOU"+str(nr)+".png", image)
-    # cv2.waitKey(0)
+    #cv2.waitKey(0)
+exit()

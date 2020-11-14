@@ -3,12 +3,12 @@ import glob
 
 
 lo = []
-path = "/home/sverrir/Documents/Yolo_data/Training_5feb_yolo3cfg_rgbdata/Testset_detection/"
+path = "/home/sverrir/Documents/Yolo_data/log/"
 num = 1
 for filename in glob.glob(os.path.join(path, '*.log')):
-    file = open(path+filename[-6:-4]+".txt", "w") #les stafi -6 til -4 í nafninu til að fá 01 - 30
-    #print(filename)
-    #print(filename[-7:-4])
+    file = open(path+filename[-8:-4]+".txt", "w") #les stafi -6 til -4 í nafninu til að fá 01 - 30
+    print(filename)
+    print(filename[-8:-4])
     with open(filename) as f:
         for line in f.read().split("\n")[1::1]: #Sleppi fyrstu línu og les hverja línu eftir það
             lo.append(line)

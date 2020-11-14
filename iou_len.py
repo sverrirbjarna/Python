@@ -62,7 +62,7 @@ for nr in range(1, 31):
 
     image = cv2.imread(photopath)
     examples = []
-    for j in prediicttxt:
+    for j, s in zip(prediicttxt, groundtxt):
         pred = [float(j[1]), float(j[2]), float(j[3]), float(j[4])]
         gt = [0, 0, 0, 0]
         dist = 10000
