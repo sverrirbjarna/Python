@@ -3,7 +3,7 @@ import glob
 
 
 lo = []
-path = "/home/sverrir/Documents/Yolo_data/log/"
+path = "/home/sverrir/Documents/Yolo_data/Biersdorf_split/First_run_detect_all"
 num = 1
 for filename in glob.glob(os.path.join(path, '*.log')):
     file = open(path+filename[-8:-4]+".txt", "w") #les stafi -6 til -4 í nafninu til að fá 01 - 30

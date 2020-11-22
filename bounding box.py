@@ -7,7 +7,7 @@ import os
 hp = 720
 wp = 1280
 
-source = "/home/sverrir/Documents/Yolo_data/Biersdorf_split/Test/"
+source = "/home/sverrir/Documents/Yolo_data/ultratestbox/ground/"
 
 if os.path.exists(source + "Detect_info.txt"):
     os.remove(source + "Detect_info.txt")
@@ -21,9 +21,9 @@ if os.path.exists(source + "toExcel.csv"):
 else:
     print("The file does not exist")
 
-for nr in range(1, 146):
+for nr in range(0, 1):
     print(str(nr).zfill(4))
-    pathg = "/home/sverrir/Documents/Yolo_data/Biersdorf_split/7/" + str(nr).zfill(4) + ".txt"
+    pathg = "/home/sverrir/Documents/Yolo_data/ultratestbox/" + str(nr).zfill(4) + ".txt"
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-g', '--groundpath', action='store',
@@ -34,7 +34,7 @@ for nr in range(1, 146):
     groundpath = args.groundpath
 
     Detection = namedtuple("Detection", ["image_path", "gt"])
-    photopath = "/home/sverrir/Documents/Yolo_data/Biersdorf_split/7/" + str(nr).zfill(4) + ".png"
+    photopath = "/home/sverrir/Documents/Yolo_data/ultratestbox/" + str(nr).zfill(4) + ".png"
 
     with open(groundpath) as textFile:
         groundtxt = [line.split() for line in textFile]
@@ -50,15 +50,15 @@ for nr in range(1, 146):
     examples = []
 
     for i in groundtxt:
-        gt = [float(i[1]), float(i[2]), float(i[3]), float(i[4])]
-
+        gt = [int(i[0]), int(i[1]), int(i[2]), int(i[3])]
+        print(gt)
         xgt = int((wp * gt[0]) - ((wp * gt[2]) / 2))
         ygt = int(hp * gt[1] - ((hp * gt[3]) / 2))
         wgt = int(((wp * gt[0]) - ((wp * gt[2]) / 2)) + wp * gt[2])
         hgt = int((hp * gt[1] - ((hp * gt[3]) / 2)) + hp * gt[3])
 
 
-        example = Detection(photopath, [xgt, ygt, wgt, hgt])
+        example = Detection(photopath, [int(i[0]), int(i[1]), int(i[2]), int(i[3])])
         examples.append(example)
 
         cv2.circle(image, (int(wp * gt[0]),
@@ -75,6 +75,6 @@ for nr in range(1, 146):
             cv2.rectangle(image, tuple(detection.gt[:2]),
                         tuple(detection.gt[2:]), (255, 0, 0), 2)
 
-            #cv2.imshow("Image", image)
+            cv2.imshow("Image", image)
             cv2.imwrite(source + "IOU" + str(nr) + ".png", image)
 exit()

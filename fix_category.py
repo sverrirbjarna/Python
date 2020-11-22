@@ -9,6 +9,6 @@ for filename in os.listdir(os.getcwd()):
                     row = line.strip().split(" ")
 
                     if not int(row[0]):
-                        row[0] = '1'
+                        row[0] = '0'
                         print(row)
                         file.write(" ".join(row) + "\n")

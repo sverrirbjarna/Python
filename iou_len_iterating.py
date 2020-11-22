@@ -8,7 +8,7 @@ import os
 hp = 720
 wp = 1280
 
-source = "/home/sverrir/Documents/Yolo_data/log/"
+source = "/home/sverrir/Documents/Yolo_data/Biersdorf_split/First_run_detect_all/First_run_detect_all"
 
 if os.path.exists(source+"Detect_info.txt"):
   os.remove(source+"Detect_info.txt")
@@ -24,7 +24,7 @@ else:
 
 for nr in range(1, 2151):
     print(str(nr).zfill(4))
-    pathg = "/home/sverrir/Documents/Yolo_data/Biersdorf/"+str(nr).zfill(4)+".txt"
+    pathg = "/home/sverrir/Documents/Yolo_data/Biersdorf_split/Joined/all/"+str(nr).zfill(4)+".txt"
     #pathp = "/home/sverrir/Documents/Yolo_data/Biersdorf/"+str(nr)+".txt"
     pathp = source+str(nr).zfill(4)+".txt"
     file1 = open(source+"Detect_info.txt","a")#append mode
@@ -44,7 +44,7 @@ for nr in range(1, 2151):
     predpath = args.predpath
 
     Detection = namedtuple("Detection", ["image_path", "gt", "pred"])
-    photopath = "/home/sverrir/Documents/Yolo_data/Biersdorf/"+str(nr).zfill(4)+".png"
+    photopath = "/home/sverrir/Documents/Yolo_data/Biersdorf_split/Joined/all/"+str(nr).zfill(4)+".png"
 
     with open(groundpath) as textFile:
         groundtxt = [line.split() for line in textFile]
