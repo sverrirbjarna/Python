@@ -10,8 +10,8 @@ wp = 1280
 
 photo_directory = "/home/sverrir/Documents/Yolo_data/Compare_and_notrain/test10pall/"
 ground_directory = "/home/sverrir/Documents/Yolo_data/Compare_and_notrain/test10pall/"
-predict_directory = "/home/sverrir/Documents/Yolo_data/Compare_and_notrain/test10p_Darknet_last/"
-source = "/home/sverrir/Documents/Yolo_data/Compare_and_notrain/test10p_Darknet_last_IOU/"
+predict_directory = "/home/sverrir/Documents/Yolo_data/Compare_and_notrain/test10p_last_1cls/"
+source = "/home/sverrir/Documents/Yolo_data/Compare_and_notrain/test10p_last_1cls_IOU/"
 
 if os.path.exists(source+"Detect_info.txt"):
   os.remove(source+"Detect_info.txt")
