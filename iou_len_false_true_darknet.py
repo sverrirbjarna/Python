@@ -8,7 +8,7 @@ import os
 hp = 720
 wp = 1280
 
-source = "/home/sverrir/Documents/Yolo_data/Biersdorf_split/First_run_detect_all/First_run_detect_all"
+source = "/home/sverrir/Documents/Yolo_data/Test/best_rgb_transfer_IOU/"
 
 if os.path.exists(source+"Detect_info.txt"):
   os.remove(source+"Detect_info.txt")
@@ -22,13 +22,19 @@ if os.path.exists(source+"toExcel.csv"):
 else:
   print("The file does not exist")
 
-for nr in range(1, 2151):
-    print(str(nr).zfill(4))
-    pathg = "/home/sverrir/Documents/Yolo_data/Biersdorf_split/Joined/all/"+str(nr).zfill(4)+".txt"
-    #pathp = "/home/sverrir/Documents/Yolo_data/Biersdorf/"+str(nr)+".txt"
-    pathp = source+str(nr).zfill(4)+".txt"
+for nr in range(1, 31):
+
+    pathg = "/home/sverrir/Documents/Yolo_data/Testset/"+str(nr).zfill(4)+".txt"
+    pathp = "/home/sverrir/Documents/Yolo_data/Test/best_rgb_transfer/"+str(nr).zfill(2)+".png.txt"
+    print("pathp: "+ pathp)
+    if os.path.exists(pathp):
+        print(str(nr).zfill(4))
+    else:
+        print("No Detection")
+        continue
+    #pathp = source+str(nr).zfill(4)+".txt"
     file1 = open(source+"Detect_info.txt","a")#append mode
-    file2 = open(source + "toExcel.csv", "a")  # append mode
+    file2 = open(source +"toExcel.csv", "a")  # append mode
     
 
     parser = argparse.ArgumentParser()
@@ -44,7 +50,7 @@ for nr in range(1, 2151):
     predpath = args.predpath
 
     Detection = namedtuple("Detection", ["image_path", "gt", "pred"])
-    photopath = "/home/sverrir/Documents/Yolo_data/Biersdorf_split/Joined/all/"+str(nr).zfill(4)+".png"
+    photopath = "/home/sverrir/Documents/Yolo_data/Testset/"+str(nr).zfill(2)+".png"
 
     with open(groundpath) as textFile:
         groundtxt = [line.split() for line in textFile]
@@ -58,10 +64,14 @@ for nr in range(1, 2151):
 
     nr_ground = len(groundtxt)
     nr_bbox = len(prediicttxt)
-    false_detect = len(prediicttxt) - len(groundtxt)
+    false_positive = len(prediicttxt) - len(groundtxt)
+    if false_positive < 0:
+        false_positive = 0
+
+    true_positive = len(prediicttxt) - false_positive
     print("box: "+str(nr_ground))
-    print("detections"+str(nr_bbox))
-    print("false detections" + str(false_detect))
+    print("detections: "+str(nr_bbox))
+    print("false detections: " + str(false_positive))
 
 
     d = 1000
@@ -155,15 +165,29 @@ for nr in range(1, 2151):
         iou_tmp = bb_intersection_over_union(detection.gt, detection.pred)
         # d_tmp = distance.euclidean((int(wp * gt[0]), int(hp * gt[1])),
         #                           (int(wp * pred[0]), int(hp * pred[1])))
-
+        print(detection.gt)
+        print(detection.pred)
+        print(iou_tmp)
         iou = iou + iou_tmp
         # draw the ground-truth bounding box along with the predicted
         # bounding box
-        cv2.rectangle(image, tuple(detection.gt[:2]),
-                    tuple(detection.gt[2:]), (255, 0, 0), 2)
-        cv2.rectangle(image, tuple(detection.pred[:2]),
-                    tuple(detection.pred[2:]), (0, 0, 255), 2)
+        if iou >= 0.4:
+            print(iou)
+            cv2.rectangle(image, tuple(detection.gt[:2]),
+                          tuple(detection.gt[2:]), (0, 255, 0), 2)
+            cv2.rectangle(image, tuple(detection.pred[:2]),
+                          tuple(detection.pred[2:]), (0, 0, 255), 2)
+        else:
+            print(iou)
+            cv2.rectangle(image, tuple(detection.gt[:2]),
+                          tuple(detection.gt[2:]), (255, 0, 0), 1)
+            cv2.rectangle(image, tuple(detection.pred[:2]),
+                          tuple(detection.pred[2:]), (0, 0, 255), 2)
 
+
+        if iou < 0.5:
+            false_positive = false_positive + 1
+            true_positive = true_positive - 1
         #d = d + d_tmp
         #print(d_tmp/nr_bbox)
         #if d_tmp < d:
@@ -174,7 +198,7 @@ for nr in range(1, 2151):
     #print(len(d_best))
 
     if len(d_best)>0:
-        cv2.circle(image, d_best[1], 2, (0, 255, 0), 6)
+        cv2.circle(image, d_best[1], 2, (255, 255, 0), 6)
 
     if nr_bbox == 0:
         nr_bbox = 1
@@ -188,10 +212,12 @@ for nr in range(1, 2151):
     file1.write("Max Distance: "+str(d_max)+"\n")
     file1.write("Average Distance: "+str(d_average)+"\n")
     file1.write("Nr of detections: "+str(nr_bbox)+"\n")
+    file1.write("True positive: " + str(true_positive) + "\n")
+    file1.write("False positive: " + str(false_positive) + "\n")
     file1.write("\n")
     file1.close()
-    file2.write(
-        str(nr) + "," + str(nr_bbox) + "," + str(iou) + "," + str(d) + "," + str(d_max) + "," + str(d_average) + "\n")
+    file2.write(str(nr) + "," + str(nr_bbox) + "," + str(nr_bbox) + "," + str(iou) +
+                "," + str(iou) + "," + str(d) + "," + str(d_max) + "," + str(d_average) + "\n")
     file1.close()
     file2.close()
 
@@ -211,6 +237,11 @@ for nr in range(1, 2151):
                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 50), 2)
     #print("{}: {:.4f}".format(detection.image_path, d))
 
+    cv2.putText(image, "True positive: {:.4f}".format(true_positive), (10, 110),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 50), 2)
+
+    cv2.putText(image, "False positive: {:.4f}".format(false_positive), (10, 130),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 50), 2)
     # show the output image
     #cv2.imshow("Image", image)
     cv2.imwrite(source+"IOU"+str(nr)+".png", image)
