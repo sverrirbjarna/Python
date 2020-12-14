@@ -1,10 +1,10 @@
 import shutil
 import os
 
-my_file = open("/home/sverrir/Documents/Yolo_data/Biersdorf_split/Joined/Biersdorf_all/test10p.txt", "r")
+my_file = open("/home/sverrir/Documents/Yolo_data/Biersdorf_split/Joined/Biersdorf_all/test20p.txt", "r")
 content_list = my_file.read().splitlines()
 
 print(content_list)
 
 for f in content_list:
-    shutil.copy(f, '/home/sverrir/Documents/Yolo_data/Biersdorf_split/Joined/test10pall')
+    shutil.copy(f, '/home/sverrir/Documents/Yolo_data/Biersdorf_split/Joined/test20pall')

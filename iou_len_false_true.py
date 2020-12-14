@@ -8,10 +8,10 @@ import os
 hp = 720
 wp = 1280
 
-photo_directory = "/home/sverrir/Documents/Yolo_data/Compare_and_notrain/test10pall/"
-ground_directory = "/home/sverrir/Documents/Yolo_data/Compare_and_notrain/test10pall/"
-predict_directory = "/home/sverrir/Documents/Yolo_data/Compare_and_notrain/test10p_last_1cls/"
-source = "/home/sverrir/Documents/Yolo_data/Compare_and_notrain/test10p_last_1cls_IOU/"
+photo_directory = "/home/sverrir/Documents/Yolo_data/BiersdorfCrossval/test20pall/"
+ground_directory = "/home/sverrir/Documents/Yolo_data/BiersdorfCrossval/test20pall/"
+predict_directory = "/home/sverrir/Documents/Yolo_data/BiersdorfCrossval/last_Biersdorf_all20p1_final/"
+source = "/home/sverrir/Documents/Yolo_data/BiersdorfCrossval/last_Biersdorf_all20p1_final_IOU/"
 
 if os.path.exists(source+"Detect_info.txt"):
   os.remove(source+"Detect_info.txt")
