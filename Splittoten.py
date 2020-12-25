@@ -3,15 +3,15 @@ import random
 import shutil
 
 for i in range (1 , 16):
-    current_dir = "/home/sverrir/Documents/Yolo_data/Biersdorf_split/split_to_ten/" + str(i) + "/"
+    current_dir = "/home/sverrir/Documents/Yolo_data/Biersdorf_split/97_48/" + str(i) + "/"
 
-    for j in range (1 , 11):
-        new_dir = "/home/sverrir/Documents/Yolo_data/Biersdorf_split/split_to_ten/Split/"+ str(i) + "/" + str(j) + "/"
+    for j in range (1 , 3):
+        new_dir = "/home/sverrir/Documents/Yolo_data/Biersdorf_split/97_48/Testset/"+ str(i) + "/" + str(j) + "/"
         if not os.path.exists(new_dir):
             os.makedirs(new_dir)
 
-        file_train = open(new_dir + 'train.txt', 'w')
-        file_test = open(new_dir + 'test.txt', 'w')
+        file_train = open(new_dir + 'train_' + str(i) + '_' + str(j) + '.txt', 'w')
+        file_test = open(new_dir + 'test_' + str(i) + '_' + str(j) + '.txt', 'w')
 
         if j <=5 :
             for k in range(1, 16):
