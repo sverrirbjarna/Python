@@ -8,10 +8,12 @@ import os
 hp = 720
 wp = 1280
 
+path = "last_Biersdorf12_10_12_7_8_13_yolov3"
+
 photo_directory = "/home/sverrir/Documents/Yolo_data/Biersdorf97-48/48Testset/"
 ground_directory = "/home/sverrir/Documents/Yolo_data/Biersdorf97-48/48Testset/"
-predict_directory = "/home/sverrir/Documents/Yolo_data/Biersdorf97-48/best_Biersdorf_continue_last_12_15_weightdecay/"
-source = "/home/sverrir/Documents/Yolo_data/Biersdorf97-48/best_Biersdorf_continue_last_12_15_weightdecay_IOU/"
+predict_directory = "/home/sverrir/Documents/Yolo_data/Biersdorf97-48/"+ path+ "/"
+source = "/home/sverrir/Documents/Yolo_data/Biersdorf97-48/"+ path+ "_IOU/"
 
 if os.path.exists(source+"Detect_info.txt"):
   os.remove(source+"Detect_info.txt")
